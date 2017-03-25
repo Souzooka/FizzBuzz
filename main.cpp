@@ -2,8 +2,15 @@
 
 using namespace std;
 
+void fizzBuzz(int range)
+{
+    ;
+}
+
 int main()
 {
-    cout << "Hello world!" << endl;
+    int range;
+    cin >> range;
+    fizzBuzz(range);
     return 0;
 }
