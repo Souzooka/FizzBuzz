@@ -1,8 +1,7 @@
 #include <iostream>
+#include "FizzBuzz.h"
 
 using namespace std;
-
-void fizzBuzz(int range);
 
 int main()
 {
