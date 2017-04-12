@@ -1,5 +1,5 @@
-# FizzBuzz-CPP
-An implementation of FizzBuzz challenge in C++
+# FizzBuzz
+This repository contains implementations of the FizzBuzz challenge in various languages.
 
 
 __
