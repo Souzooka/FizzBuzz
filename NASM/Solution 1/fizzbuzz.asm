@@ -21,7 +21,7 @@ CMAIN:
 ; division remainders are stored in the edx register following the operation
 
     mov     eax, fizz;
-    call    strlen
+    call    sprint
     call    quit
 
     
@@ -64,7 +64,14 @@ finished:
 ; void sprint(string msg)
 ; Prints a string
 sprint:
-    
+    push    eax
+    call    strlen
+    mov     edx, eax
+    pop     ecx
+    mov     eax, 4
+    mov     ebx, 1
+    int 80h
+    ret
 
 ;------------------------------
 ; void sprintLF(int msg)
