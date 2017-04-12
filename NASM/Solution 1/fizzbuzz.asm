@@ -7,6 +7,7 @@ buzz        db      'Buzz', 0x00
 section .text
 global CMAIN
 CMAIN:
+    mov ebp, esp; for correct debugging
     
 ; # of arguments is indicated by ecx when program is loaded
 ; we're only going to be accessing the first argument, though
@@ -19,7 +20,8 @@ CMAIN:
 
 ; division remainders are stored in the edx register following the operation
 
-
+    mov     eax, fizz;
+    call    strlen
     call    quit
 
     
@@ -40,8 +42,29 @@ CMAIN:
 ; Prints an integer with trailing linefeed
 
 ;------------------------------
+; int strlen(string msg)
+; Determines the length of a string using pointer arithmetic.
+strlen:
+    push    ebx
+    mov     ebx, eax
+
+nextbyte:
+    cmp     byte[ebx], 0
+    jz      finished
+    inc     ebx
+    jmp     nextbyte
+    
+finished:
+    sub     ebx, eax
+    mov     eax, ebx
+    pop     ebx
+    ret
+
+;------------------------------
 ; void sprint(string msg)
 ; Prints a string
+sprint:
+    
 
 ;------------------------------
 ; void sprintLF(int msg)
