@@ -1,5 +1,5 @@
 # FizzBuzz
-Implementations of the FizzBuzz challenge in various languages
+This repository contains implementations of the FizzBuzz challenge in various languages.
 
 
 __
