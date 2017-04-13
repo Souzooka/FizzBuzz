@@ -23,20 +23,6 @@ CMAIN:
 
 ; division remainders are stored in the edx register following the operation
 
-    xor     eax, eax
-    xor     ecx, ecx
-    xor     edx, edx
-    xor     ebx, ebx
-    xor     esi, esi
-    xor     edi, edi
-    
-    mov     eax, 92
-    call    iprintLF
-    mov     eax, fizz
-    call    sprintLF
-    mov     eax, buzz
-    call    sprintLF
-    
     mov     edx, 255
     mov     ecx, sinput
     mov     ebx, 0
@@ -45,12 +31,20 @@ CMAIN:
     
     mov     eax, sinput
     call    atoi
+    mov     ebx, eax
+    xor     ecx, ecx
+    
+fizzBuzzLoop:
+    mov     eax, ecx
     call    iprintLF
+    cmp     ebx, ecx
+    je      finishedFizzBuzzLoop
+    inc     ecx
+    jmp     fizzBuzzLoop
     
-    
+finishedFizzBuzzLoop:  
     call    quit
-
-    
+ 
 ;-------------------------------
 ; void iprint(int number)
 ; Converts an integer to ASCII and prints it
