@@ -32,17 +32,47 @@ CMAIN:
     mov     eax, sinput
     call    atoi
     mov     ebx, eax
-    xor     ecx, ecx
+    mov     ecx, 1
     
 fizzBuzzLoop:
+    xor     edi, edi
+    xor     edx, edx
+    mov     esi, 3
     mov     eax, ecx
-    call    iprintLF
+    idiv    esi
+    cmp     edx, 0
+    je      fizzBuzzLoopFizz
+    jmp     fizzBuzzLoopBuzz
+fizzBuzzLoopFizz:
+    mov     eax, fizz
+    call    sprint
+    inc     edi
+fizzBuzzLoopBuzz:
+    xor     edx, edx
+    mov     esi, 5
+    mov     eax, ecx
+    div     esi
+    cmp     edx, 0
+    jnz     fizzBuzzLoopNeither
+    mov     eax, buzz
+    call    sprint
+    jmp     fizzBuzzLoopCompare
+fizzBuzzLoopNeither:
+    cmp     edi, 0
+    jnz     fizzBuzzLoopCompare
+    mov     eax, ecx
+    call    iprint
+fizzBuzzLoopCompare:
+    mov     eax, 0Ah
+    push    eax
+    mov     eax, esp
+    call    sprint
+    pop     eax
     cmp     ebx, ecx
-    je      finishedFizzBuzzLoop
+    je      fizzBuzzLoopFinished
     inc     ecx
     jmp     fizzBuzzLoop
-    
-finishedFizzBuzzLoop:  
+fizzBuzzLoopFinished:
     call    quit
  
 ;-------------------------------
