@@ -3,7 +3,9 @@
 section .data
 fizz        db      'Fizz', 0x00
 buzz        db      'Buzz', 0x00
-ninety      db      92
+
+SECTION .bss
+sinput:     resb    255
 
 section .text
 global CMAIN
@@ -28,12 +30,24 @@ CMAIN:
     xor     esi, esi
     xor     edi, edi
     
-    mov     eax, [ninety]
+    mov     eax, 92
     call    iprintLF
     mov     eax, fizz
     call    sprintLF
     mov     eax, buzz
     call    sprintLF
+    
+    mov     edx, 255
+    mov     ecx, sinput
+    mov     ebx, 0
+    mov     eax, 3
+    int 80h
+    
+    mov     eax, sinput
+    call    atoi
+    call    iprintLF
+    
+    
     call    quit
 
     
@@ -89,7 +103,42 @@ iprintLF:
 ;-------------------------------
 ; int atoi(string number)
 ; Converts ASCII to an integer
-
+atoi:
+    push    ebx
+    push    ecx
+    push    edx
+    push    esi
+    mov     esi, eax
+    xor     eax, eax
+    xor     ecx, ecx
+    
+multiplyLoop:
+    xor     ebx, ebx
+    mov     bl, [esi+ecx]
+    cmp     bl, 48
+    jl      atoiFinished
+    cmp     bl, 57
+    jg      atoiFinished
+    cmp     bl, 10
+    je      atoiFinished
+    cmp     bl, 0
+    jz      atoiFinished
+    
+    sub     bl, 48
+    add     eax, ebx
+    mov     ebx, 10
+    mul     ebx
+    inc     ecx
+    jmp     multiplyLoop
+    
+atoiFinished:
+    mov     ebx, 10
+    div     ebx
+    pop     esi
+    pop     edx
+    pop     ecx
+    pop     ebx
+    ret
 
 ;------------------------------
 ; int strlen(string msg)
