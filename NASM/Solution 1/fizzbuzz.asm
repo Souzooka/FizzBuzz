@@ -3,7 +3,7 @@
 section .data
 fizz        db      'Fizz', 0x00
 buzz        db      'Buzz', 0x00
-ninety      db      90
+ninety      db      92
 
 section .text
 global CMAIN
@@ -21,16 +21,27 @@ CMAIN:
 
 ; division remainders are stored in the edx register following the operation
 
-    mov     eax, [ninety];
-    call    itoa
+    xor     eax, eax
+    xor     ecx, ecx
+    xor     edx, edx
+    xor     ebx, ebx
+    xor     esi, esi
+    xor     edi, edi
+    
+    mov     eax, [ninety]
+    call    iprintLF
+    mov     eax, fizz
+    call    sprintLF
+    mov     eax, buzz
+    call    sprintLF
     call    quit
 
     
 ;-------------------------------
-; string itoa(int number)
-; Converts an integer to ASCII
-itoa:
-    push    ebx
+; void iprint(int number)
+; Converts an integer to ASCII and prints it
+iprint:
+    push    eax
     push    ecx
     push    edx
     push    esi
@@ -41,45 +52,44 @@ divideloop:
     mov     edx, 0
     mov     esi, 10
     idiv    esi
-    add     edx, 48
+    add     edx, 0x30
     push    edx
     cmp     eax, 0
     jnz     divideloop
-    mov     esi, ecx
-        
-    printloop:
-    mov     eax, 4
-    mov     ebx, 1
-    pop     ecx
-    int 80h
     
-    dec     esi
-    cmp     esi, 0
+printloop:
+    dec     ecx
+    mov     eax, esp
+    call    sprint
+    pop     eax
+    cmp     ecx, 0
     jnz     printloop
     
+iprintfinished:
     pop     esi
-    pop     ecx
     pop     edx
-    pop     esi
+    pop     ecx
+    pop     eax
     ret
 
-
-    
-    
-    
-    
+;------------------------------
+; void iprintLF(int msg)
+; Prints an integer with trailing linefeed
+iprintLF:
+    call    iprint
+    push    eax
+    mov     eax, 0Ah
+    push    eax
+    mov     eax, esp
+    call    sprint
+    pop     eax
+    pop     eax
+    ret
     
 ;-------------------------------
 ; int atoi(string number)
 ; Converts ASCII to an integer
 
-;------------------------------
-; void iprint(int msg)
-; Prints an integer
-
-;------------------------------
-; void iprintLF(int msg)
-; Prints an integer with trailing linefeed
 
 ;------------------------------
 ; int strlen(string msg)
@@ -89,14 +99,13 @@ strlen:
     mov     ebx, eax
 
 nextbyte:
-    cmp     byte[ebx], 0
+    cmp     byte[eax], 0
     jz      finished
-    inc     ebx
+    inc     eax
     jmp     nextbyte
     
 finished:
-    sub     ebx, eax
-    mov     eax, ebx
+    sub     eax, ebx
     pop     ebx
     ret
 
@@ -105,17 +114,34 @@ finished:
 ; Prints a string
 sprint:
     push    eax
+    push    ebx
+    push    ecx
+    push    edx
+    mov     ecx, eax
     call    strlen
     mov     edx, eax
-    pop     ecx
     mov     eax, 4
     mov     ebx, 1
     int 80h
+    pop     edx
+    pop     ecx
+    pop     ebx
+    pop     eax
     ret
 
 ;------------------------------
 ; void sprintLF(int msg)
 ; Prints a string with trailing linefeed
+sprintLF:
+    call    sprint
+    push    eax
+    mov     eax, 0Ah
+    push    eax
+    mov     eax, esp
+    call    sprint
+    pop     eax
+    pop     eax
+    ret
 
 ;------------------------------
 ; void quit(void)
