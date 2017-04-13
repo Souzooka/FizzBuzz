@@ -3,6 +3,7 @@
 section .data
 fizz        db      'Fizz', 0x00
 buzz        db      'Buzz', 0x00
+ninety      db      90
 
 section .text
 global CMAIN
@@ -20,14 +21,53 @@ CMAIN:
 
 ; division remainders are stored in the edx register following the operation
 
-    mov     eax, fizz;
-    call    sprint
+    mov     eax, [ninety];
+    call    itoa
     call    quit
 
     
 ;-------------------------------
 ; string itoa(int number)
 ; Converts an integer to ASCII
+itoa:
+    push    ebx
+    push    ecx
+    push    edx
+    push    esi
+    xor     ecx, ecx
+
+divideloop:
+    inc     ecx
+    mov     edx, 0
+    mov     esi, 10
+    idiv    esi
+    add     edx, 48
+    push    edx
+    cmp     eax, 0
+    jnz     divideloop
+    mov     esi, ecx
+        
+    printloop:
+    mov     eax, 4
+    mov     ebx, 1
+    pop     ecx
+    int 80h
+    
+    dec     esi
+    cmp     esi, 0
+    jnz     printloop
+    
+    pop     esi
+    pop     ecx
+    pop     edx
+    pop     esi
+    ret
+
+
+    
+    
+    
+    
     
 ;-------------------------------
 ; int atoi(string number)
